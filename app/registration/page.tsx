@@ -1,4 +1,4 @@
-//app/registeation/page.tsx
+//app/registration/page.tsx
 
 'use client';
 
@@ -17,11 +17,11 @@ export default function RegistrationForm() {
 
   const router = useRouter();
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { // Fix any type
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { // Fix any type
     e.preventDefault();
 
     const { fname, lname, number, email, password } = formData;
@@ -63,7 +63,7 @@ export default function RegistrationForm() {
       } else {
         toast.error(result.message || "Registration failed");
       }
-    } catch (err) {
+    } catch { // Remove unused err parameter
       toast.error("Server error");
     }
   };
@@ -138,8 +138,6 @@ export default function RegistrationForm() {
     </div>
   );
 }
-
-
 
 //==========================================================================================================================================
 // 'use client';

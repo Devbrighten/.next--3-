@@ -3,19 +3,24 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import Link from 'next/link';
+
+// Define proper user type interface
+interface User {
+  id: string;
+  email: string;
+  iat: number;
+  exp: number;
+}
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null); // Fix any type
   const router = useRouter();
 
   const logoutHandler = () => {
-   
-      localStorage.removeItem('token');
-      localStorage.removeItem('users');
-      toast.success("Logged out successfully!");
-      router.push('/');
-     
+    localStorage.removeItem('token');
+    localStorage.removeItem('users');
+    toast.success("Logged out successfully!");
+    router.push('/');
   }
 
   useEffect(() => {
@@ -35,7 +40,6 @@ export default function ProfilePage() {
           },
         });
 
-        
         const result = await res.json();
 
         if (result.success) {
@@ -61,27 +65,21 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen flex items-center justify-center text-white">
       <div className="bg-gray-800 border-spacing-4 p-6 rounded-md shadow-md">
-      <h1 className="text-2xl font-bold mb-6 text-center">My Profile</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">My Profile</h1>
         <h1 className="text-4xl font-bold mb-4">Welcome, hello👋</h1>
-        <h1 className="text-3xl font-bold mb-4">Eamil: {user.email} </h1>
+        <h1 className="text-3xl font-bold mb-4">Email: {user.email}</h1>
         <p><strong>User ID: </strong>{user.id}</p>
         <p><strong>Issued At:</strong> {new Date(user.iat * 1000).toLocaleString()}</p>
         <p><strong>Expires At:</strong> {new Date(user.exp * 1000).toLocaleString()}</p>
 
-           <div className='text-center'>
-           <button
-              onClick={logoutHandler}
-               className="mt-4 px-6 py-2 bg-red-500 text-white   rounded-md hover:bg-red-600 transition"
-                 >
-                  Logout
-            </button>
-
-           </div>
-        {/* <Link href="/">
-        <button className="mt-8 px-6 py-3 bg-white text-black rounded-lg hover:bg-white transition-colors">
-          Back to Home
-        </button>
-      </Link> */}
+        <div className='text-center'>
+          <button
+            onClick={logoutHandler}
+            className="mt-4 px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );

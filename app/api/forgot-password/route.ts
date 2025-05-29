@@ -1,3 +1,5 @@
+ // app/api/forgot-password/route.ts
+ 
 // app/api/forgot-password/route.ts
 
 import { NextResponse } from "next/server"
@@ -45,12 +47,67 @@ export async function POST(req: Request) {
       // Include OTP in response for development only
       devOtp: otp,
     })
-  } catch (err: any) {
-    console.error("Error generating OTP:", err)
-    return NextResponse.json({ success: false, message: "Failed to generate OTP. Please try again." }, { status: 500 })
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error occurred"
+    console.error("Error generating OTP:", errorMessage)
+    return NextResponse.json({ 
+      success: false, 
+      message: "Failed to generate OTP. Please try again." 
+    }, { status: 500 })
   }
 }
 
+// import { NextResponse } from "next/server"
+// import UserModel from "@/lib/models/users"
+// import { ConnectDb } from "@/lib/database/db"
+
+// // Simple OTP storage for development (DO NOT use in production)
+// const otpStorage = new Map()
+
+// export async function POST(req: Request) {
+//   try {
+//     const { email } = await req.json()
+
+//     // Generate 4-digit OTP
+//     const otp = Math.floor(1000 + Math.random() * 9000).toString()
+//     console.log("Generated OTP:", otp)
+
+//     // Store OTP in memory (for development only)
+//     otpStorage.set(email, {
+//       otp,
+//       expiry: new Date(Date.now() + 15 * 60 * 1000),
+//     })
+
+//     // Try to connect to DB and save OTP if possible
+//     try {
+//       await ConnectDb()
+//       const user = await UserModel.findOne({ email: email.toLowerCase() })
+
+//       if (user) {
+//         user.resetPasswordOtp = otp
+//         user.resetPasswordOtpExpiry = new Date(Date.now() + 15 * 60 * 1000)
+//         await user.save()
+//       }
+//     } catch (dbError) {
+//       console.error("Database error:", dbError)
+//       // Continue anyway - we'll use in-memory OTP
+//     }
+
+//     // Log the OTP for development
+//     console.log(`🔐 OTP for ${email}: ${otp} (will be sent to developer.brightensolutions@gmail.com in production)`)
+
+//     return NextResponse.json({
+//       success: true,
+//       message: "OTP generated successfully. Check console for OTP (development mode).",
+//       // Include OTP in response for development only
+//       devOtp: otp,
+//     })
+//   } catch (err: any) {
+//     console.error("Error generating OTP:", err)
+//     return NextResponse.json({ success: false, message: "Failed to generate OTP. Please try again." }, { status: 500 })
+//   }
+// }
+//==================================================================================================================
 
 // import { NextResponse } from "next/server"
 // import UserModel from "@/lib/models/users";

@@ -47,7 +47,7 @@ function ResetPasswordForm() {
       } else {
         toast.error(result.message)
       }
-    } catch (error) {
+    } catch { // Remove unused error parameter
       toast.error("Something went wrong. Please try again.")
     } finally {
       setLoading(false)

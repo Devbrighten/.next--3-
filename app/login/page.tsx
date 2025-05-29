@@ -8,15 +8,14 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '', remember: false });
   const router = useRouter();
 
-
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       router.push('/profile'); // Already logged in
     }
-  }, []); 
+  }, [router]); // Add router to dependency array
 
-  const handleChange = (e: any) => { 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { // Fix any type
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -24,14 +23,13 @@ export default function LoginPage() {
     }));
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { // Fix any type
     e.preventDefault();
     if (!formData.email || !formData.password) {
       toast.error("Both fields are required");
       return;
     }
     
-
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
@@ -42,7 +40,6 @@ export default function LoginPage() {
       const result = await res.json();
 
       if (result.success) {
-        
         toast.success("Login successful!");
 
          // Token store in localStorage
@@ -53,7 +50,7 @@ export default function LoginPage() {
       } else {
         toast.error(result.message || "Login failed");
       }
-    } catch (err) {
+    } catch { // Remove unused err parameter
       toast.error("Something went wrong");
     }
   };
@@ -112,7 +109,7 @@ export default function LoginPage() {
           </button>
 
           <div className="text-sm text-center">
-            Don’t have an account?{' '}
+            Don't have an account?{' '}
             <button type="button" onClick={() => router.push('/registration')} className="font-semibold text-white underline">
               SIGN UP
             </button>

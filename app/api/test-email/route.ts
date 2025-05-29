@@ -24,7 +24,7 @@ export async function GET() {
       })
     }
 
-    // Create transporter
+    // Create transporter - FIXED: createTransport (not createTransporter)
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: Number(process.env.EMAIL_PORT),
@@ -61,14 +61,17 @@ export async function GET() {
         config: emailConfig,
       },
     })
-  } catch (error: any) {
-    console.error("❌ Email test failed:", error)
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
+    const errorDetails = error instanceof Error ? error : { message: "Unknown error" }
+    
+    console.error("❌ Email test failed:", errorMessage)
 
     return NextResponse.json({
       success: false,
       message: "Email test failed",
-      error: error.message,
-      details: error,
+      error: errorMessage,
+      details: errorDetails,
     })
   }
 }

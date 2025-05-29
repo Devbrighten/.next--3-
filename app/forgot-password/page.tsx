@@ -39,9 +39,9 @@ export default function ForgotPasswordPage() {
       } else {
         toast.error(result.message)
       }
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong. Please try again.")
-      console.error("Error:", error)
+      console.error("Error occurred while sending OTP")
     } finally {
       setLoading(false)
     }
@@ -65,7 +65,7 @@ export default function ForgotPasswordPage() {
       } else {
         toast.error(result.message)
       }
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong. Please try again.")
     } finally {
       setLoading(false)

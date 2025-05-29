@@ -11,7 +11,7 @@ export default function Dashboard() {
     if (!token) {
       router.push("/login");
     }
-  }, []);
+  }, [router]); // Add router to dependency array
 
   return (
     <div className="text-center py-56 px-80">

@@ -49,12 +49,15 @@ export async function POST(req: Request) {
     } else {
       return NextResponse.json({ success: false, message: "Invalid or expired OTP." }, { status: 400 })
     }
-  } catch (err: any) {
-    console.error("Error verifying OTP:", err)
-    return NextResponse.json({ success: false, message: "Failed to verify OTP. Please try again." }, { status: 500 })
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error occurred"
+    console.error("Error verifying OTP:", errorMessage)
+    return NextResponse.json({ 
+      success: false, 
+      message: "Failed to verify OTP. Please try again." 
+    }, { status: 500 })
   }
 }
-
 
 // import { NextResponse } from "next/server";
 // import UserModel from "@/lib/models/users";
